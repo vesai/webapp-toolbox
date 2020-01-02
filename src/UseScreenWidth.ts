@@ -1,7 +1,4 @@
 import React from 'react';
-import { Subject } from 'rxjs';
-
-// TODO do we need rxjs!?
 
 type UseScreenWidthOptions = {
   maxMobileWidth: number;
@@ -22,10 +19,11 @@ export const UseScreenWidth = (options: UseScreenWidthOptions): UseScreenWidthHo
   const mobileMedia = window.matchMedia(`(max-width: ${options.maxMobileWidth}px)`);
   const tabletMedia = window.matchMedia(`(max-width: ${options.maxTabletWidth}px)`);
 
-  const subject = new Subject();
+  const changeSizeSubscribers = new Set<() => void>();
+  const notiftSubscribers = () => changeSizeSubscribers.forEach(s => s());
 
-  mobileMedia.addListener(() => subject.next());
-  tabletMedia.addListener(() => subject.next());
+  mobileMedia.addListener(notiftSubscribers);
+  tabletMedia.addListener(notiftSubscribers);
 
   const createState = (isMobile: boolean, isTablet: boolean, isDesktop: boolean): ScreenWidth => ({
     isMobile,
@@ -54,8 +52,9 @@ export const UseScreenWidth = (options: UseScreenWidthOptions): UseScreenWidthHo
 
     React.useEffect(
       () => {
-        const subscription = subject.subscribe(() => setScreenWidth(getCurrentState()));
-        return () => subscription.unsubscribe();
+        const handleChanges = () => setScreenWidth(getCurrentState());
+        changeSizeSubscribers.add(handleChanges);
+        return () => { changeSizeSubscribers.delete(handleChanges); };
       },
       []
     );
