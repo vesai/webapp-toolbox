@@ -2,7 +2,7 @@
 
 ## UseScreenWidth
 ### Initialize
-For example in file "./useScreenWidth"
+For example in file *./useScreenWidth*
 ```ts
 import { UseScreenWidth } from 'webapp-toolbox';
 export const useScreenWidth = UseScreenWidth({
