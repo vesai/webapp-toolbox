@@ -1,0 +1,24 @@
+{
+  "name": "webapp-toolbox",
+  "version": "1.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"No test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vesai/webapp-toolbox.git"
+  },
+  "author": "Aleksey Veselovskiy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vesai/webapp-toolbox/issues"
+  },
+  "homepage": "https://github.com/vesai/webapp-toolbox#readme",
+  "devDependencies": {
+    "typescript": "^3.7.4"
+  }
+}
