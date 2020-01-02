@@ -1,6 +1,8 @@
 import React from 'react';
 import { Subject } from 'rxjs';
 
+// TODO do we need rxjs!?
+
 type UseScreenWidthOptions = {
   maxMobileWidth: number;
   maxTabletWidth: number;
