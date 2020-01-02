@@ -21,5 +21,10 @@
   "homepage": "https://github.com/vesai/webapp-toolbox#readme",
   "devDependencies": {
     "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.17",
+    "react": "^16.12.0",
+    "rxjs": "^6.5.4"
   }
 }
