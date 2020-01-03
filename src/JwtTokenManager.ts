@@ -1,4 +1,4 @@
-export const enum UnexpectedBehavior {
+const enum UnexpectedBehavior {
   // Do not reorder members
   TokenFromAnotherPageHasWrongExpired = 0,
   LocalStorageTokenBecameNull = 1,
