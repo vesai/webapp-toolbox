@@ -24,5 +24,7 @@
     "typescript": "^3.7.4",
     "react": "^16.12.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "rxjs": "^6.5.4"
+  }
 }
