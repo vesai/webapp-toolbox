@@ -1,44 +1,36 @@
 import { Subject, Observable } from 'rxjs';
+import { share } from 'rxjs/operators';
 
 export type SubscribersMap<TKey, TSubscriptionValue> = {
   get(key: TKey): Observable<TSubscriptionValue>;
   next(key: TKey, value: TSubscriptionValue): void;
 }
 
-// TODO try to find way without number, only with rx
-
 export const SubscribersMap = <TKey, TSubscriptionValue>(): SubscribersMap<TKey, TSubscriptionValue> => {
-  const subscribersMap = new Map<TKey, [Subject<TSubscriptionValue>, number]>();
-
+  const itemsMap = new Map<TKey, [Subject<TSubscriptionValue>, Observable<TSubscriptionValue>]>();
   return {
     get(key: TKey): Observable<TSubscriptionValue> {
-
       return new Observable(subscriber => {
-        const mapData = subscribersMap.get(key);
-        let data: [Subject<TSubscriptionValue>, number];
-        if (mapData === undefined) {
-          data = [new Subject(), 1];
-          subscribersMap.set(key, data);
-        } else {
-          data = mapData;
-          data[1]++;
+        const x = itemsMap.get(key);
+        if (x !== undefined) {
+          return x[1].subscribe(subscriber);
         }
 
-        data[0].subscribe(subscriber);
+        const obs = (new Observable<TSubscriptionValue>(s => {
+          const subject = new Subject<TSubscriptionValue>();
+          itemsMap.set(key, [subject, obs]);
+          subject.subscribe(s);
+          return () => { itemsMap.delete(key); };
+        }))
+          .pipe(share());
 
-        return () => {
-          if (data[1] === 1) {
-            subscribersMap.delete(key);
-          } else {
-            data[1]--;
-          }
-        };
+        return obs.subscribe(subscriber);
       });
     },
     next(key: TKey, value: TSubscriptionValue): void {
-      const subscriber = subscribersMap.get(key);
-      if (subscriber !== undefined) {
-        subscriber[0].next(value);
+      const x = itemsMap.get(key);
+      if (x !== undefined) {
+        x[0].next(value);
       }
     }
   };
