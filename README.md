@@ -2,4 +2,5 @@
 
 - Easy client-server interactions with function calls interface [RemoteFunctionCalls](docs/RemoteFunctionCalls.md)
 - React hook to defining screen width type (mobile, tablet, desktop) [UseScreenWidth](docs/UseScreenWidth.md)
-- Tool for RxJs [SubscribersMap](docs/SubscribersMap.md)
+- React hook for cache get api requests [UseGet](docs/UseGet.md)
+- Tools for easy watch web storage [ObservableWebStorage](docs/ObservableWebStorage.md)
