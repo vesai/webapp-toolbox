@@ -1,8 +1,8 @@
 import React from 'react';
 
 type UseScreenWidthOptions = {
-  maxMobileWidth: number;
-  maxTabletWidth: number;
+  maxMobileWidthPx: number;
+  maxTabletWidthPx: number;
 }
 
 type ScreenWidth = {
@@ -16,8 +16,8 @@ type ScreenWidth = {
 type UseScreenWidthHook = () => ScreenWidth;
 
 export const UseScreenWidth = (options: UseScreenWidthOptions): UseScreenWidthHook => {
-  const mobileMedia = window.matchMedia(`(max-width: ${options.maxMobileWidth}px)`);
-  const tabletMedia = window.matchMedia(`(max-width: ${options.maxTabletWidth}px)`);
+  const mobileMedia = window.matchMedia(`(max-width: ${options.maxMobileWidthPx}px)`);
+  const tabletMedia = window.matchMedia(`(max-width: ${options.maxTabletWidthPx}px)`);
 
   const changeSizeSubscribers = new Set<() => void>();
   const notiftSubscribers = () => changeSizeSubscribers.forEach(s => s());

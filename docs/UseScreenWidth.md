@@ -1,4 +1,23 @@
-# React hook useScreenWidth (mobile, tablet, desktop)
+# UseScreenWidth
+Tools for creating react hook for defining page width type (mobile, tablet, desktop)
+
+## Api
+### UseScreenWidth
+The function for creating *useScreenWidth* react hook.
+
+#### Arguments
+
+##### options
+- *maxMobileWidthPx*
+- *maxTabletWidthPx*
+
+#### Return value
+It returns function useScreenWidth() that returns object with boolean values:
+- *isMobile* = *pageWidth* &lt;= *maxMobileWidthPx*
+- *isTablet* = *maxMobileWidthPx* &lt; *pageWidth* &lt;= *maxTabletWidthPx*
+- *isDesktop* = *maxTabletWidthPx* &lt; *pageWidth*
+- *isMobileOrTablet* = *pageWidth* &lt;= *maxTabletWidthPx*
+- *isTabletOrDesktop* = *maxMobileWidthPx* &lt; *pageWidth*
 
 ## Example
 
@@ -8,8 +27,8 @@ For example in file *./useScreenWidth*
 import { UseScreenWidth } from 'webapp-toolbox';
 
 export const useScreenWidth = UseScreenWidth({
-  maxMobileWidth: 1020,
-  maxTabletWidth: 1270
+  maxMobileWidthPx: 1020,
+  maxTabletWidthPx: 1270
 });
 ```
 
