@@ -3,6 +3,20 @@ import stringify from 'fast-json-stable-stringify';
 import { startWith } from 'rxjs/operators';
 
 import { ApiGetCache } from './ApiGetCache';
+import { useMemoCustom } from './useMemoCustom';
+
+const isEqualArrayOrNull = (a: unknown[] | null, b: unknown[] | null): boolean => {
+  if (a === b) {
+    return true;
+  }
+  if (a === null || b === null) {
+    return false;
+  }
+  if (a.length !== b.length) {
+    return false;
+  }
+  return a.every((item, index) => item === b[index]);
+}
 
 export const UseGet = () => {
   const apiGetCache = ApiGetCache();
@@ -18,9 +32,10 @@ export const UseGet = () => {
     argsArray: TArgs | null,
     timestamp?: number
   ) => {
-    const cacheKey = React.useMemo(
+    const cacheKey = useMemoCustom(
       () => argsArray === null ? null : stringify(argsArray),
-      argsArray === null ? undefined : argsArray
+      isEqualArrayOrNull,
+      argsArray
     );
   
     const [result, setResult] = React.useState<TResult | null>(() => {
