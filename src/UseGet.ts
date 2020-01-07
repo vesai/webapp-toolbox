@@ -52,7 +52,7 @@ export const UseGet = () => {
 
           const subscription = apiGetCache
             .getCacheSubscription(getterFunction, cacheKey)
-            .subscribe(() => callback);
+            .subscribe(callback);
           return () => subscription.unsubscribe();
         }
       }),
