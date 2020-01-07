@@ -1,6 +1,6 @@
 {
   "name": "webapp-toolbox",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,11 +21,13 @@
   "homepage": "https://github.com/vesai/webapp-toolbox#readme",
   "devDependencies": {
     "@types/react": "^16.9.17",
+    "@types/use-subscription": "^1.0.0",
     "typescript": "^3.7.4"
   },
   "dependencies": {
     "fast-json-stable-stringify": "^2.1.0",
+    "react": "^16.12.0",
     "rxjs": "^6.5.4",
-    "react": "^16.12.0"
+    "use-subscription": "^1.3.0"
   }
 }

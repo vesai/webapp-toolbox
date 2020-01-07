@@ -1,18 +1,17 @@
 import React from 'react';
 import stringify from 'fast-json-stable-stringify';
-import { startWith } from 'rxjs/operators';
+import { useSubscription, Subscription } from 'use-subscription';
 
 import { ApiGetCache } from './ApiGetCache';
-import { useMemoCustom } from './useMemoCustom';
+import { useValueMemo } from './useValueMemo';
+
+const emptyFunction = () => {};
 
 const isEqualArrayOrNull = (a: unknown[] | null, b: unknown[] | null): boolean => {
   if (a === b) {
     return true;
   }
-  if (a === null || b === null) {
-    return false;
-  }
-  if (a.length !== b.length) {
+  if (a === null || b === null || a.length !== b.length) {
     return false;
   }
   return a.every((item, index) => item === b[index]);
@@ -32,38 +31,43 @@ export const UseGet = () => {
     argsArray: TArgs | null,
     timestamp?: number
   ) => {
-    const cacheKey = useMemoCustom(
-      () => argsArray === null ? null : stringify(argsArray),
-      isEqualArrayOrNull,
-      argsArray
+    const cachedArgsArray = useValueMemo(argsArray, isEqualArrayOrNull);
+    const cacheKey = React.useMemo(
+      () => cachedArgsArray === null ? null : stringify(cachedArgsArray),
+      [cachedArgsArray]
     );
-  
-    const [result, setResult] = React.useState<TResult | null>(() => {
-      if (cacheKey === null) {
-        return null;
-      }
-      return apiGetCache.getFreshestResult(getterFunction, cacheKey, timestamp);
-    });
-  
-    React.useEffect(
-      () => {
-        if (cacheKey === null) {
-          return;
+
+    const subscriptionParams = React.useMemo<Subscription<TResult | null>>(
+      () => ({
+        getCurrentValue: () => {
+          if (cacheKey === null) {
+            return null;
+          }
+          return apiGetCache.getFreshestResult(getterFunction, cacheKey, timestamp);
+        },
+        subscribe: callback => {
+          if (cacheKey === null) {
+            return emptyFunction;
+          }
+
+          const subscription = apiGetCache
+            .getCacheSubscription(getterFunction, cacheKey)
+            .subscribe(() => callback);
+          return () => subscription.unsubscribe();
         }
-        const subscription = apiGetCache.getCacheSubscription(getterFunction, cacheKey)
-          .pipe(startWith(undefined))
-          .subscribe(() => {
-            const currentResult = apiGetCache.getFreshestResult(getterFunction, cacheKey, timestamp);
-            setResult(currentResult);
-            if (currentResult === null) {
-              apiGetCache.tryMakeRequest(getterFunction, cacheKey, argsArray, timestamp);
-            }
-          });
-  
-        return () => subscription.unsubscribe();
-      },
+      }),
       [getterFunction, cacheKey, timestamp]
     );
-    return result;
+
+    React.useEffect(
+      () => {
+        if (cacheKey !== null) {
+          apiGetCache.tryMakeRequest(getterFunction, cacheKey, cachedArgsArray, timestamp);
+        }
+      },
+      [getterFunction, cacheKey, cachedArgsArray, timestamp]
+    );
+
+    return useSubscription(subscriptionParams);
   };
 }
