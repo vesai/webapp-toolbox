@@ -1,6 +1,6 @@
 {
   "name": "webapp-toolbox",
-  "version": "3.1.4",
+  "version": "3.2",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
