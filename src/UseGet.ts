@@ -17,9 +17,7 @@ const isEqualArrayOrNull = (a: unknown[] | null, b: unknown[] | null): boolean =
   return a.every((item, index) => item === b[index]);
 }
 
-export const UseGet = () => {
-  const apiGetCache = ApiGetCache();
-
+export const UseGet = (apiGetCache: ApiGetCache) => {
   /**
    * 
    * @param getterFunction Function for making request

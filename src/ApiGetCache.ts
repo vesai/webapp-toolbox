@@ -20,10 +20,12 @@ export type ApiGetCache = {
   getFreshestResult<TResult>(func: (...args: any) => Promise<TResult>, key: string, requiredTimestamp?: number): TResult | null;
   tryMakeRequest(func: RequestFunction, key: string, data: any, requiredTimestamp?: number): void;
   getCacheSubscription(func: RequestFunction, key: string): Observable<undefined>;
+  subscribeNewValue<T1 extends [], T2>(func: (...params: T1) => Promise<T2>): Observable<{ params: T1, result: T2 }>;
 }
 
 export const ApiGetCache = (): ApiGetCache => {
   const cahceItems = new Map<RequestFunction, CacheFunctionItem<any>>();
+  const subscriptionsNewValue = SubscribersMap<RequestFunction, { params: any, result: any }>();
 
   const getFreshestResult = (func: RequestFunction, key: string, requiredTimestamp?: number) => {
     const funcCache = cahceItems.get(func);
@@ -72,6 +74,7 @@ export const ApiGetCache = (): ApiGetCache => {
           ) {
             funcCache.cache.set(key, { lastSuccess: { response, timestamp } });
             funcCache.subscribers.next(key, undefined);
+            subscriptionsNewValue.next(func, { params: data, result: response });
           }
         },
         () => {
@@ -106,9 +109,14 @@ export const ApiGetCache = (): ApiGetCache => {
     return getOrCreateFuncCache(func).subscribers.get(key);
   };
 
+  const subscribeNewValue = <T1 extends [], T2>(func: (...params: T1) => Promise<T2>): Observable<{ params: T1, result: T2 }> => {
+    return subscriptionsNewValue.get(func);
+  };
+
   return {
     getFreshestResult,
     tryMakeRequest,
-    getCacheSubscription
+    getCacheSubscription,
+    subscribeNewValue
   };
 }
