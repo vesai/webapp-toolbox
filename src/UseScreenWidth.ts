@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 
 type UseScreenWidthOptions = {
   maxMobileWidthPx: number;
@@ -48,9 +48,9 @@ export const UseScreenWidth = (options: UseScreenWidthOptions): UseScreenWidthHo
   };
 
   return () => {
-    const [screenWidth, setScreenWidth] = React.useState<ScreenWidth>(getCurrentState);
+    const [screenWidth, setScreenWidth] = useState<ScreenWidth>(getCurrentState);
 
-    React.useEffect(
+    useEffect(
       () => {
         const handleChanges = () => setScreenWidth(getCurrentState());
         changeSizeSubscribers.add(handleChanges);

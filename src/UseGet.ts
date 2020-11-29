@@ -1,4 +1,4 @@
-import React from 'react';
+import { useMemo, useEffect } from 'react';
 import stringify from 'fast-json-stable-stringify';
 import { useSubscription, Subscription } from 'use-subscription';
 
@@ -30,12 +30,12 @@ export const UseGet = (apiGetCache: ApiGetCache) => {
     timestamp?: number
   ) => {
     const cachedArgsArray = useValueMemo(argsArray, isEqualArrayOrNull);
-    const cacheKey = React.useMemo(
+    const cacheKey = useMemo(
       () => cachedArgsArray === null ? null : stringify(cachedArgsArray),
       [cachedArgsArray]
     );
 
-    const subscriptionParams = React.useMemo<Subscription<TResult | null>>(
+    const subscriptionParams = useMemo<Subscription<TResult | null>>(
       () => ({
         getCurrentValue: () => {
           if (cacheKey === null) {
@@ -57,7 +57,7 @@ export const UseGet = (apiGetCache: ApiGetCache) => {
       [getterFunction, cacheKey, timestamp]
     );
 
-    React.useEffect(
+    useEffect(
       () => {
         if (cacheKey !== null) {
           apiGetCache.tryMakeRequest(getterFunction, cacheKey, cachedArgsArray, timestamp);

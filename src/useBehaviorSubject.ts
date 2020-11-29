@@ -1,9 +1,9 @@
-import React from 'react';
+import { useMemo } from 'react';
 import { BehaviorSubject } from 'rxjs';
 import { useSubscription, Subscription } from 'use-subscription';
 
 export const useBehaviorSubject = <T>(behaviorSubject: BehaviorSubject<T>) => {
-  const subscriptionParams = React.useMemo<Subscription<T>>(
+  const subscriptionParams = useMemo<Subscription<T>>(
     () => ({
       getCurrentValue: () => behaviorSubject.getValue(),
       subscribe: callback => {
