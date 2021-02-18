@@ -41,6 +41,7 @@ export const UseGet = (apiGetCache: ApiGetCache) => {
           if (cacheKey === null) {
             return null;
           }
+          apiGetCache.tryMakeRequest(getterFunction, cacheKey, cachedArgsArray, timestamp);
           return apiGetCache.getFreshestResult(getterFunction, cacheKey, timestamp);
         },
         subscribe: callback => {
