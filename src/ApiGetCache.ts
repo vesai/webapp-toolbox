@@ -23,7 +23,9 @@ export type ApiGetCache = {
   subscribeNewValue<T1 extends [], T2>(func: (...params: T1) => Promise<T2>): Observable<{ params: T1, result: T2 }>;
 }
 
-export const ApiGetCache = (): ApiGetCache => {
+type ErrorHandler = (error: any) => void;
+
+export const ApiGetCache = (errorHandler: ErrorHandler): ApiGetCache => {
   const cahceItems = new Map<RequestFunction, CacheFunctionItem<any>>();
   const subscriptionsNewValue = SubscribersMap<RequestFunction, { params: any, result: any }>();
 
@@ -77,11 +79,12 @@ export const ApiGetCache = (): ApiGetCache => {
             subscriptionsNewValue.next(func, { params: data, result: response });
           }
         },
-        () => {
+        error => {
           const item = funcCache.cache.get(key);
           if (item !== undefined && item.lastSuccess === undefined) {
             funcCache.cache.delete(key);
           }
+          errorHandler(error);
         }
       );
   };
