@@ -1,6 +1,6 @@
 {
   "name": "webapp-toolbox",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,8 +28,5 @@
     "fast-json-stable-stringify": "^2.1.0",
     "rxjs": "^6.5.4",
     "use-subscription": "^1.3.0"
-  },
-  "optionalDependencies": {
-    "react": "^17.0.1"
   }
 }
